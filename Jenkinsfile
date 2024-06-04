@@ -5,8 +5,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Building the Docker image directly using a bat command
-                    bat "docker build -t hello-world-nodejs ."
+                    // Build the Docker image using no-cache to avoid any caching issues
+                    bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
         }
@@ -14,8 +14,8 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Testing by running the Docker container with mounted volume and set workdir using full control over Docker command
-                    bat 'docker run --rm -v "%WORKSPACE%:/usr/src/app" -w "/usr/src/app" hello-world-nodejs npm test'
+                    // Run tests using the Docker container
+                    bat "docker run --rm -v \"${env.WORKSPACE}:/usr/src/app\" -w \"/usr/src/app\" hello-world-nodejs npm test"
                 }
             }
         }
@@ -24,12 +24,7 @@ pipeline {
     post {
         always {
             echo 'This will always run'
-        }
-        success {
-            echo 'Build succeeded!'
-        }
-        failure {
-            echo 'Build failed!'
+            echo 'Build completed'
         }
     }
 }
