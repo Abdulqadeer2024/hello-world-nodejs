@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require('./app'); // Your Express app
+const app = require('./app'); // Ensure this path is correct for your app
 
 describe('GET /', () => {
     it('responds with Hello World', (done) => {
@@ -8,4 +8,3 @@ describe('GET /', () => {
             .expect('Hello World', done);
     });
 });
-
