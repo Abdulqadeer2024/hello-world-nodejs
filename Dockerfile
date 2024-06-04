@@ -1,20 +1,17 @@
 # Use the official Node.js 16 image.
-# https://hub.docker.com/_/node
 FROM node:16.20.1
 
-# Create and change to the app directory.
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
+# Install Jest globally
+RUN npm install -g jest
+
+# Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install production dependencies.
+# Install all dependencies
 RUN npm install
 
-# Copy local code to the container image.
+# Copy the rest of the application
 COPY . .
-
-# Run the web service on container startup.
-CMD [ "npm", "start" ]
