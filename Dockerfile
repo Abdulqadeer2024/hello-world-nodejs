@@ -1,5 +1,5 @@
+bat "docker build --no-cache -t hello-world-nodejs ."
 FROM node:16.20.1
-
 WORKDIR /usr/src/app
 
 COPY package*.json ./
