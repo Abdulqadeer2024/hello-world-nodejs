@@ -1,45 +1,17 @@
-pipeline {
-    agent any
-
-    tools {
-        nodejs "NodeJS-16.20.1" // Specify the Node.js version to use
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code...'
-                checkout scm // Checkout code from the Git repository
-            }
-        }
-
-        stage('Build') {
-            steps {
-                echo 'Building the Docker image...'
-                script {
-                    // Build the Docker image using the Dockerfile in the repository
-                    docker.build('hello-world-nodejs')
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                echo 'Running tests...'
-                script {
-                    // Run tests inside the Docker container
-                    docker.image('hello-world-nodejs').inside {
-                        sh 'npm install' // Install dependencies
-                        sh 'npm test' // Run tests
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Cleaning up post build...'
-        }
-    }
+{
+  "name": "hello-world-nodejs",
+  "version": "1.0.0",
+  "description": "A simple Node.js app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "supertest": "^6.1.3"
+  }
 }
