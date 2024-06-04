@@ -7,3 +7,4 @@ RUN npm install -g jest
 RUN npm install
 
 COPY . .
+RUN ls -la /usr/src/app
