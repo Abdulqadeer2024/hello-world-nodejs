@@ -5,7 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build the Docker image using no-cache to avoid any caching issues
+                    // Build the Docker image using no-cache to ensure a clean build
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Run tests using the Docker container
-                    bat "docker run --rm -v \"${env.WORKSPACE}:/usr/src/app\" -w \"/usr/src/app\" hello-world-nodejs npm test"
+                    bat "docker run --rm hello-world-nodejs"
                 }
             }
         }
@@ -24,7 +24,7 @@ pipeline {
     post {
         always {
             echo 'This will always run'
-            echo 'Build completed'
+            echo 'Build process completed'
         }
     }
 }
