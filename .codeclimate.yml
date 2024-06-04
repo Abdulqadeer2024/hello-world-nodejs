@@ -1,13 +1,16 @@
 version: "2"
 checks:
-  argument_count:
+  argument-count:
     config:
       threshold: 4
 plugins:
+  eslint:
+    enabled: true
   duplication:
     enabled: true
     config:
       languages:
-        - javascript
+        javascript:
 exclude_patterns:
-  - "tests/"
+  - "node_modules/"
+  - "test/"
