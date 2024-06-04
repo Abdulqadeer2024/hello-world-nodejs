@@ -1,36 +1,47 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "NodeJS-16.20.1" // Specify the Node.js version to use
+    environment {
+        // Define environment variables that can be used throughout the pipeline
+        DOCKER_IMAGE = 'hello-world-nodejs'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out code...'
-                checkout scm // Checkout code from the Git repository
+                // Checkout the Git repository
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Building the Docker image...'
+                // Building the Docker image
                 script {
-                    // Build the Docker image using the Dockerfile in the repository
-                    docker.build('hello-world-nodejs')
+                    docker.build("${env.DOCKER_IMAGE}")
                 }
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
+                // Running tests using the Docker image
                 script {
-                    // Run tests inside the Docker container
-                    docker.image('hello-world-nodejs').inside('-w /usr/src/app') {
-                        sh 'npm install' // Install dependencies
-                        sh 'npm test' // Run tests
+                    docker.image("${env.DOCKER_IMAGE}").inside {
+                        sh 'npm test'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Deployment steps, customize based on your deployment method
+                echo "Deploying Application..."
+                // For example, pushing Docker image to a registry
+                script {
+                    docker.withRegistry('https://your-registry-url', 'your-registry-credentials-id') {
+                        docker.image("${env.DOCKER_IMAGE}").push("latest")
                     }
                 }
             }
@@ -39,13 +50,16 @@ pipeline {
 
     post {
         always {
-            echo 'Cleaning up post build...'
+            // Actions that always happen regardless of pipeline result
+            echo 'This will always run'
         }
         success {
-            echo 'Build and Test stages were successful!'
+            // Actions to perform on successful completion of pipeline
+            echo 'Build succeeded!'
         }
         failure {
-            echo 'Build or Test stage failed.'
+            // Actions to take on failure of pipeline
+            echo 'Build failed!'
         }
     }
 }
