@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install -g jest
 RUN npm install
+RUN npm install && ls node_modules | grep supertest
 
 COPY . .
 RUN ls -la /usr/src/app
