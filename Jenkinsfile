@@ -28,7 +28,7 @@ pipeline {
                 echo 'Running tests...'
                 script {
                     // Run tests inside the Docker container
-                    docker.image('hello-world-nodejs').inside {
+                    docker.image('hello-world-nodejs').inside('-w /usr/src/app') {
                         sh 'npm install' // Install dependencies
                         sh 'npm test' // Run tests
                     }
