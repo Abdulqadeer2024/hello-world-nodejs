@@ -1,26 +1,21 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE = 'hello-world-nodejs'
-    }
-
     stages {
         stage('Build') {
             steps {
                 script {
-                    docker.build("${env.DOCKER_IMAGE}")
+                    // Building the Docker image directly using a bat command
+                    bat "docker build -t hello-world-nodejs ."
                 }
             }
         }
+
         stage('Test') {
             steps {
                 script {
-                    // Correctly format the Windows path for Docker volume
-                    def windowsWorkspace = env.WORKSPACE.replace("\\", "/")
-                    docker.image("${env.DOCKER_IMAGE}").inside("-u root -v ${windowsWorkspace}:/usr/src/app -w /usr/src/app") {
-                        bat "npm test"
-                    }
+                    // Testing by running the Docker container with mounted volume and set workdir using full control over Docker command
+                    bat 'docker run --rm -v "%WORKSPACE%:/usr/src/app" -w "/usr/src/app" hello-world-nodejs npm test'
                 }
             }
         }
