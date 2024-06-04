@@ -13,5 +13,5 @@ RUN npm install
 # Copy the rest of your application code
 COPY . .
 
-# Command to run when starting the container
+# Jest is used as the default test command
 CMD ["npm", "test"]
