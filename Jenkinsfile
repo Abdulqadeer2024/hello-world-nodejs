@@ -1,39 +1,46 @@
 pipeline {
     agent any
+
     environment {
-        CC_TEST_REPORTER_ID = 'your_code_climate_reporter_id'  // Replace with your actual Code Climate Reporter ID
+        // Define environment variables if necessary
+        NODE_VERSION = '16.20.1'
     }
+
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Abdulqadeer2024/hello-world-nodejs.git'
+                git branch: 'main', url: 'https://github.com/Abdulqadeer2024/hello-world-nodejs.git'
             }
         }
+
         stage('Build') {
             steps {
-                sh 'npm install'
-            }
-        }
-        stage('Code Quality Analysis') {
-            steps {
                 script {
-                    sh 'docker run --rm -v "$(pwd):/code" codeclimate/codeclimate analyze'
+                    // Assuming Docker is used to build the Node.js application
+                    sh 'docker build --no-cache -t hello-world-nodejs .'
                 }
             }
         }
+
         stage('Test') {
             steps {
-                sh 'npm test'
+                script {
+                    // Run tests using the Docker container
+                    sh 'docker run --rm hello-world-nodejs npm test'
+                }
             }
         }
     }
+
     post {
         always {
             echo 'This will always run'
         }
+
         success {
-            echo 'Build was a success!'
+            echo 'Build process completed successfully!'
         }
+
         failure {
             echo 'Build failed!'
         }
