@@ -2,16 +2,10 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_SCANNER_HOME = tool 'Default'
+        SONARQUBE_TOKEN = 'squ_f8b2a7f9fae9cc57adfcc05f1a7809db296cc111'
     }
 
     stages {
-        stage('Checkout SCM') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
                 script {
@@ -31,11 +25,8 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 script {
-                    bat "${env.SONARQUBE_SCANNER_HOME}\\bin\\sonar-scanner.bat " +
-                        "-Dsonar.projectKey=hello-world-nodejs " +
-                        "-Dsonar.sources=. " +
-                        "-Dsonar.host.url=http://localhost:9000 " +
-                        "-Dsonar.login=squ_f8b2a7f9fae9cc57adfcc05f1a7809db296cc111"
+                    // Assuming SonarQube scanner is configured in Jenkins global tools
+                    bat "sonar-scanner.bat -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://<SONARQUBE_HOST>:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
                 }
             }
         }
