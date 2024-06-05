@@ -1,11 +1,20 @@
 pipeline {
     agent any
 
+    environment {
+        SONARQUBE_SCANNER_HOME = tool 'Default'
+    }
+
     stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
                 script {
-                    // Build the Docker image using no-cache to ensure a clean build
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
@@ -14,8 +23,19 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run tests using the Docker container
                     bat "docker run --rm hello-world-nodejs"
+                }
+            }
+        }
+
+        stage('Code Quality Analysis') {
+            steps {
+                script {
+                    bat "${env.SONARQUBE_SCANNER_HOME}\\bin\\sonar-scanner.bat " +
+                        "-Dsonar.projectKey=hello-world-nodejs " +
+                        "-Dsonar.sources=. " +
+                        "-Dsonar.host.url=http://localhost:9000 " +
+                        "-Dsonar.login=squ_f8b2a7f9fae9cc57adfcc05f1a7809db296cc111"
                 }
             }
         }
@@ -23,7 +43,6 @@ pipeline {
 
     post {
         always {
-            echo 'This will always run'
             echo 'Build process completed'
         }
     }
