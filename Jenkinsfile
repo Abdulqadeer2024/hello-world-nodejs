@@ -25,8 +25,8 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 script {
-                    // Assuming SonarQube scanner is configured in Jenkins global tools
-                    bat "sonar-scanner.bat -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://<SONARQUBE_HOST>:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
+                    // Using the configured SonarQube scanner
+                    bat "sonar-scanner.bat -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
                 }
             }
         }
