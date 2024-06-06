@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     // Wait for a few seconds to ensure the container is up and running
-                    sleep 10
+                    bat "timeout 10"
                     // Verify if the application is accessible
                     bat "curl -I http://localhost:3000"
                 }
