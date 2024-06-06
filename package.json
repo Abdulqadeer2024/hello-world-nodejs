@@ -4,7 +4,8 @@
   "description": "A simple Node.js project",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node app.js"
   },
   "jest": {
     "testEnvironment": "node"
