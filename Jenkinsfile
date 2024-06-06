@@ -18,19 +18,19 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging') {
+        stage('Deploy to Production') {
             steps {
                 script {
-                    bat "docker-compose up -d"
+                    bat "docker-compose -f docker-compose.prod.yml up -d"
                 }
             }
         }
 
-        stage('Release to Production') {
+        stage('Monitor with Datadog') {
             steps {
                 script {
-                    // Ensure the path to Octo CLI is correct as configured in Jenkins
-                    bat "octo create-release --project 'YourProjectName' --deployto 'Production' --server http://YourOctopusServer --apiKey 'API-YOURKEY'"
+                    // Assuming you have curl available on your Jenkins server
+                    bat "curl -X POST -H 'Content-type: application/json' -d '{\"title\": \"Deployment Notification\", \"text\": \"Deployment to Production completed successfully.\", \"priority\": \"normal\", \"tags\": [\"environment:production\", \"event:deployment\"], \"alert_type\": \"info\"}' 'https://api.datadoghq.com/api/v1/events?api_key=your_datadog_api_key'"
                 }
             }
         }
