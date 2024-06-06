@@ -1,40 +1,20 @@
 pipeline {
     agent any
-
     environment {
-        // Retrieve the SonarQube token stored in Jenkins credentials
-        SONARQUBE_TOKEN = credentials('abc')
+        SONARQUBE_TOKEN = 'your_sonarcloud_token'
     }
-
     stages {
-        stage('Build') {
+        stage('SonarQube analysis') {
             steps {
-                script {
-                    // Build the Docker image
-                    bat "docker build --no-cache -t hello-world-nodejs ."
-                }
-            }
-        }
-
-        stage('Test') {
-            steps {
-                script {
-                    // Run tests inside the Docker container
-                    bat "docker run --rm hello-world-nodejs"
-                }
-            }
-        }
-
-        stage('Code Quality Analysis') {
-            steps {
-                script {
-                    // Run SonarQube analysis using the configured SonarQube scanner
-                    bat "sonar-scanner -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
+                withSonarQubeEnv('SonarCloud') {
+                    script {
+                        // Assuming your source code is in a standard directory
+                        sh 'sonar-scanner -Dsonar.projectKey=your_project_key -Dsonar.organization=your_organization_key -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${env.SONARQUBE_TOKEN}'
+                    }
                 }
             }
         }
     }
-
     post {
         always {
             echo 'Build process completed'
