@@ -27,4 +27,14 @@ pipeline {
             echo 'Build process completed'
         }
     }
+
+    stage('Deploy to Staging') {
+    steps {
+        script {
+            // Change directory if your docker-compose.yml is not in the root
+            sh 'docker-compose up -d'
+        }
+    }
+}
+
 }
