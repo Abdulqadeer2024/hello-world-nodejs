@@ -2,8 +2,9 @@ pipeline {
     agent any
 
     tools {
-        // Use the correct tool type and name here
-        sonarRunner 'Default'
+        // Assuming "Default" is the name given to the SonarQube scanner in Jenkins configuration
+        // and matches the tool configuration in Jenkins
+        sonarQubeScanner 'Default'
     }
 
     environment {
@@ -30,8 +31,8 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 script {
-                    // The scanner should now be available directly
-                    bat "sonar-scanner -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
+                    // Using the environment variable directly in the command
+                    bat "sonar-scanner -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${SONARQUBE_TOKEN}"
                 }
             }
         }
