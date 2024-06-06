@@ -6,3 +6,4 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: staging
+    network_mode: bridge  # Ensures the container is accessible on the host network.
