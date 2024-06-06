@@ -1,0 +1,10 @@
+{
+  "env": {
+    "node": true,
+    "jest": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    // Define any specific rules you might want to enforce or disable
+  }
+}
