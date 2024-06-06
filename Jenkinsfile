@@ -1,43 +1,35 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('Build') {
             steps {
                 script {
+                    // Build the Docker image using no-cache to ensure a clean build
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
         }
-
+        
         stage('Test') {
             steps {
                 script {
+                    // Run tests using the Docker container
                     bat "docker run --rm hello-world-nodejs"
                 }
             }
         }
-
-        stage('Deploy to Staging') {
+        
+        stage('Deploy to Localhost') {
             steps {
                 script {
-                    bat "docker-compose up -d"
-                }
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    // Wait for a few seconds to ensure the container is up and running
-                    bat "timeout 10"
-                    // Verify if the application is accessible
-                    bat "curl -I http://localhost:3000"
+                    // Run the Docker container on localhost:3000
+                    bat "docker run -d --name hello-world-nodejs -p 3000:3000 hello-world-nodejs"
                 }
             }
         }
     }
-
+    
     post {
         always {
             echo 'This will always run'
