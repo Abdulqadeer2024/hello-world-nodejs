@@ -2,13 +2,15 @@ pipeline {
     agent any
 
     environment {
-        SONARQUBE_TOKEN = credentials('sonarqube-token') // It's safer to use credentials stored in Jenkins
+        // Retrieve the SonarQube token stored in Jenkins credentials
+        SONARQUBE_TOKEN = credentials('abc')
     }
 
     stages {
         stage('Build') {
             steps {
                 script {
+                    // Build the Docker image
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
@@ -17,6 +19,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    // Run tests inside the Docker container
                     bat "docker run --rm hello-world-nodejs"
                 }
             }
@@ -25,8 +28,8 @@ pipeline {
         stage('Code Quality Analysis') {
             steps {
                 script {
-                    // Ensure SonarQube scanner is called correctly
-                    bat "C:\\Tools\\SonarScanner\\bin\\sonar-scanner.bat -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${SONARQUBE_TOKEN}"
+                    // Run SonarQube analysis using the configured SonarQube scanner
+                    bat "sonar-scanner -Dsonar.projectKey=hello-world-nodejs -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=${env.SONARQUBE_TOKEN}"
                 }
             }
         }
