@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     tools {
-        // Make sure the name matches the one configured in Jenkins Global Tool Configuration
-        sonarQubeScanner 'Default'
+        // Use the correct tool type and name here
+        sonarRunner 'Default'
     }
 
     environment {
