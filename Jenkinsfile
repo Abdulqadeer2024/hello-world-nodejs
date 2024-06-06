@@ -24,8 +24,8 @@ pipeline {
             steps {
                 script {
                     // Stop and remove the existing container (if any)
-                    bat "docker stop hello-world-nodejs || true"
-                    bat "docker rm hello-world-nodejs || true"
+                    bat "docker stop hello-world-nodejs 2>nul || (exit 0)"
+                    bat "docker rm hello-world-nodejs 2>nul || (exit 0)"
                     
                     // Run the Docker container on localhost:3000
                     bat "docker run -d --name hello-world-nodejs -p 3000:3000 hello-world-nodejs"
@@ -52,8 +52,8 @@ pipeline {
             echo 'Build process completed'
             
             // Clean up the Docker container
-            bat "docker stop hello-world-nodejs || true"
-            bat "docker rm hello-world-nodejs || true"
+            bat "docker stop hello-world-nodejs 2>nul || (exit 0)"
+            bat "docker rm hello-world-nodejs 2>nul || (exit 0)"
         }
     }
 }
