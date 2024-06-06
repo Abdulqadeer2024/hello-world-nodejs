@@ -36,8 +36,8 @@ pipeline {
         stage('Post-Deployment Test') {
             steps {
                 script {
-                    // Wait for the application to start (adjust the sleep duration if needed)
-                    bat "timeout /t 5 /nobreak > nul"
+                    // Wait for the application to start
+                    sleep 5
                     
                     // Send a GET request to localhost:3000 and verify the response
                     bat 'curl -f http://localhost:3000 || exit 1'
