@@ -1,22 +1,29 @@
 pipeline {
     agent any
-    environment {
-        SONARQUBE_TOKEN = 'your_sonarcloud_token'
-    }
+
     stages {
-        stage('SonarQube analysis') {
+        stage('Build') {
             steps {
-                withSonarQubeEnv('SonarCloud') {
-                    script {
-                        // Assuming your source code is in a standard directory
-                        sh 'sonar-scanner -Dsonar.projectKey=your_project_key -Dsonar.organization=your_organization_key -Dsonar.sources=. -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${env.SONARQUBE_TOKEN}'
-                    }
+                script {
+                    // Build the Docker image using no-cache to ensure a clean build
+                    bat "docker build --no-cache -t hello-world-nodejs ."
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    // Run tests using the Docker container
+                    bat "docker run --rm hello-world-nodejs"
                 }
             }
         }
     }
+
     post {
         always {
+            echo 'This will always run'
             echo 'Build process completed'
         }
     }
