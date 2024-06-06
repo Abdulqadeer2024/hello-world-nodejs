@@ -19,6 +19,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy to Staging') {
+            steps {
+                script {
+                    // Assuming docker-compose.yml is in the root directory
+                    // and docker-compose is available on Jenkins agent
+                    bat "docker-compose up -d"
+                }
+            }
+        }
     }
 
     post {
@@ -27,14 +37,4 @@ pipeline {
             echo 'Build process completed'
         }
     }
-
-    stage('Deploy to Staging') {
-    steps {
-        script {
-            // Change directory if your docker-compose.yml is not in the root
-            sh 'docker-compose up -d'
-        }
-    }
-}
-
 }
