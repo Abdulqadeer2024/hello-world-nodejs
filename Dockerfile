@@ -7,15 +7,11 @@ WORKDIR /usr/src/app
 # Copy package.json and package-lock.json (if available)
 COPY package*.json ./
 
-# Install project dependencies
+# Install project dependencies including Jest
 RUN npm install
 
 # Copy the rest of your application code
 COPY . .
 
-# Expose port 3000
-EXPOSE 3000
-
-# Set the command to start your application
-CMD ["npm", "start"]
-
+# Jest is used as the default test command
+CMD ["npm", "test"]
