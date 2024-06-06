@@ -5,6 +5,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    // Build the Docker image using no-cache to ensure a clean build
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
@@ -13,24 +14,18 @@ pipeline {
         stage('Test') {
             steps {
                 script {
+                    // Run tests using the Docker container
                     bat "docker run --rm hello-world-nodejs"
                 }
             }
         }
 
-        stage('Deploy to Production') {
+        stage('Deploy to Staging') {
             steps {
                 script {
-                    bat "docker-compose -f docker-compose.prod.yml up -d"
-                }
-            }
-        }
-
-        stage('Monitor with Datadog') {
-            steps {
-                script {
-                    // Assuming you have curl available on your Jenkins server
-                    bat "curl -X POST -H 'Content-type: application/json' -d '{\"title\": \"Deployment Notification\", \"text\": \"Deployment to Production completed successfully.\", \"priority\": \"normal\", \"tags\": [\"environment:production\", \"event:deployment\"], \"alert_type\": \"info\"}' 'https://api.datadoghq.com/api/v1/events?api_key=your_datadog_api_key'"
+                    // Assuming docker-compose.yml is in the root directory
+                    // and docker-compose is available on Jenkins agent
+                    bat "docker-compose up -d"
                 }
             }
         }
@@ -38,6 +33,7 @@ pipeline {
 
     post {
         always {
+            echo 'This will always run'
             echo 'Build process completed'
         }
     }
