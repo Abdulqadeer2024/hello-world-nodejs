@@ -13,5 +13,8 @@ RUN npm install
 # Copy the rest of your application code
 COPY . .
 
-# Jest is used as the default test command
-CMD ["npm", "test"]
+# Expose port 3000
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "start"]
