@@ -5,7 +5,6 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    // Build the Docker image using no-cache to ensure a clean build
                     bat "docker build --no-cache -t hello-world-nodejs ."
                 }
             }
@@ -14,7 +13,6 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    // Run tests using the Docker container
                     bat "docker run --rm hello-world-nodejs"
                 }
             }
@@ -23,9 +21,16 @@ pipeline {
         stage('Deploy to Staging') {
             steps {
                 script {
-                    // Assuming docker-compose.yml is in the root directory
-                    // and docker-compose is available on Jenkins agent
                     bat "docker-compose up -d"
+                }
+            }
+        }
+
+        stage('Release to Production') {
+            steps {
+                script {
+                    // Ensure the path to Octo CLI is correct as configured in Jenkins
+                    bat "octo create-release --project 'YourProjectName' --deployto 'Production' --server http://YourOctopusServer --apiKey 'API-YOURKEY'"
                 }
             }
         }
@@ -33,7 +38,6 @@ pipeline {
 
     post {
         always {
-            echo 'This will always run'
             echo 'Build process completed'
         }
     }
